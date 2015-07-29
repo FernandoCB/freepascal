@@ -1505,13 +1505,14 @@ Begin
   if IsZip64 then
     LocalHdr.Extra_Field_Length:=SizeOf(LocalZip64ExtHdr)+SizeOf(LocalZip64Fld);
   FOutStream.WriteBuffer({$IFDEF ENDIAN_BIG}SwapLFH{$ENDIF}(LocalHdr),SizeOf(LocalHdr));
+  // File Name before Extra Field
+  FOutStream.WriteBuffer(ZFileName[1],Length(ZFileName));
   // Append extensible field header+zip64 extensible field if needed:
   if IsZip64 then
   begin
     FOutStream.WriteBuffer({$IFDEF ENDIAN_BIG}SwapEDFH{$ENDIF}(LocalZip64ExtHdr),SizeOf(LocalZip64ExtHdr));
     FOutStream.WriteBuffer({$IFDEF ENDIAN_BIG}SwapZ64EIF{$ENDIF}(LocalZip64Fld),SizeOf(LocalZip64Fld));
   end;
-  FOutStream.WriteBuffer(ZFileName[1],Length(ZFileName));
 End;
 
 
